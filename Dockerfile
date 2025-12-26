@@ -23,4 +23,4 @@ ENV PYTHONUNBUFFERED=1
 EXPOSE 8000
 
 # Start command
-CMD ["./run.sh"]
+CMD ["sh", "-c", "gunicorn -k uvicorn.workers.UvicornWorker -w 1 --timeout 300 --bind 0.0.0.0:${PORT} app.main:app --chdir backend"]
