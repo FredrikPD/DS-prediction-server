@@ -1,4 +1,4 @@
-const API = "http://localhost:8000/api";
+const API = "/api";
 
 function el(tag, attrs = {}, children = []) {
   const e = document.createElement(tag);
