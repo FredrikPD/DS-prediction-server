@@ -1,0 +1,52 @@
+{
+  "type": "ColumnTransformer",
+  "transformers": [
+    {
+      "name": "num",
+      "cols": [
+        "DepDelay",
+        "Distance"
+      ],
+      "class": "Pipeline",
+      "params": {
+        "memory": null,
+        "steps": [
+          [
+            "imputer",
+            "SimpleImputer(fill_value=0, strategy='constant')"
+          ],
+          [
+            "scaler",
+            "StandardScaler(with_mean=False)"
+          ]
+        ],
+        "transform_input": null,
+        "verbose": false
+      }
+    },
+    {
+      "name": "cat",
+      "cols": [
+        "Airline",
+        "Origin",
+        "Dest"
+      ],
+      "class": "Pipeline",
+      "params": {
+        "memory": null,
+        "steps": [
+          [
+            "imputer",
+            "SimpleImputer(fill_value='__MISSING__', strategy='constant')"
+          ],
+          [
+            "onehot",
+            "OneHotEncoder(dtype=<class 'numpy.float32'>, handle_unknown='ignore')"
+          ]
+        ],
+        "transform_input": null,
+        "verbose": false
+      }
+    }
+  ]
+}
