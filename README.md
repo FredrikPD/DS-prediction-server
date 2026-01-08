@@ -6,40 +6,59 @@ The system follows a Client-Server architecture with a clear separation between 
 
 ```mermaid
 graph TD
-    %% Client Layer
-    Client[Client Browser / Frontend]
-    
-    %% Server Layer
-    subgraph Server ["Prediction Server (FastAPI)"]
-        API[API Routes]
-        Registry[Model Registry Service]
-        Main[Application Main entry]
+    %% 1. PRESENTATION LAYER (USER & CLIENT)
+    subgraph Presentation ["Presentation Layer"]
+        User(("User"))
+        Browser["Client Browser"]
     end
 
-    %% Data Layer
-    subgraph Data ["Data & Artifacts"]
-        Artifacts[Model Artifacts /backend/artifacts]
+    %% 2. LOGIC LAYER (SERVER & MODULES)
+        subgraph Server ["Prediction Server"]
+            Main["Main Entry"]
+            
+            subgraph Modules ["Server Modules"]
+                Routes["API Routes"]
+                Registry["Model Registry"]
+            end
+        end
+
+    %% 3. DATA LAYER (ARTIFACTS)
+    subgraph Data ["Data Layer"]
+            Manifest[("manifest.json")]
+            PipelineFile[("preparation_pipeline.joblib")]
+            ModelFiles[("Models (*.joblib)")]
+
     end
-    
-    %% Flows
-    Client -- "HTTP Requests (JSON/Files)" --> API
-    API -- "Manage State" --> Main
-    Main -- "Initialize" --> Registry
-    Registry -- "Load Models & Pipeline" --> Artifacts
-    API -- "Request Prediction" --> Registry
-    
-    %% Endpoint Specifics
-    API -- "POST /evaluate-models" --> Registry
 
-    %% Styling (professional, muted)
-    classDef client fill:#F3F6FB,stroke:#334155,stroke-width:1.5px,color:#0F172A;
-    classDef server fill:#E8F0FE,stroke:#1E3A8A,stroke-width:1.5px,color:#0F172A;
-    classDef data   fill:#ECFDF5,stroke:#065F46,stroke-width:1.5px,color:#0F172A;
+    %% --- DATA FLOW ---
+    
+    %% Forward Pass
+    User -->|"Action"| Browser
+    Browser -->|"HTTP Request"| Routes
+    Routes -->|"Forward Request"| Registry
+    Registry -->|"Query"| ModelFiles
+    
+    %% Backward Pass
+    ModelFiles -.->|"Return Prediction"| Registry
+    Registry -.->|"Return Result"| Routes
+    Routes -.->|"JSON Response"| Browser
+    Browser -.->|"Display View"| User
 
-    class Client client;
-    class API,Registry,Main server;
-    class Artifacts data;
+    %% Initialization (Startup)
+    Main -->|"Initialize"| Registry
+    Registry -.->|"Load Config"| Manifest
+    Registry -.->|"Load Pipeline"| PipelineFile
+
+    %% STYLING
+    classDef pres fill:#F3F6FB,stroke:#334155,stroke-width:2px;
+    classDef logic fill:#E8F0FE,stroke:#1E3A8A,stroke-width:2px;
+    classDef data fill:#ECFDF5,stroke:#065F46,stroke-width:2px;
+
+    class User,Browser pres;
+    class Main,Routes,Registry server;
+    class Manifest,PipelineFile,ModelFiles data;
 ```
+
 
 ### Module Descriptions
 - **Client**: The frontend interface (Static HTML/JS) that interacts with the user.

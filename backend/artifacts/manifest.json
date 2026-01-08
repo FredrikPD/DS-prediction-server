@@ -1,85 +1,119 @@
 {
   "target_column": "Cancelled",
   "feature_columns": [
-    "FlightDate",
     "Airline",
     "Origin",
     "Dest",
-    "Cancelled",
-    "Diverted",
-    "CRSDepTime",
-    "DepTime",
-    "DepDelayMinutes",
-    "DepDelay",
-    "ArrTime",
-    "ArrDelayMinutes",
-    "AirTime",
-    "CRSElapsedTime",
-    "ActualElapsedTime",
-    "Distance",
-    "Year",
-    "Quarter",
-    "Month",
-    "DayofMonth",
-    "DayOfWeek",
-    "Marketing_Airline_Network",
-    "Operated_or_Branded_Code_Share_Partners",
-    "DOT_ID_Marketing_Airline",
-    "IATA_Code_Marketing_Airline",
-    "Flight_Number_Marketing_Airline",
-    "Operating_Airline",
-    "DOT_ID_Operating_Airline",
-    "IATA_Code_Operating_Airline",
-    "Tail_Number",
-    "Flight_Number_Operating_Airline",
-    "OriginAirportID",
-    "OriginAirportSeqID",
-    "OriginCityMarketID",
-    "OriginCityName",
-    "OriginState",
-    "OriginStateFips",
-    "OriginStateName",
-    "OriginWac",
-    "DestAirportID",
-    "DestAirportSeqID",
-    "DestCityMarketID",
-    "DestCityName",
-    "DestState",
-    "DestStateFips",
-    "DestStateName",
-    "DestWac",
-    "DepDel15",
-    "DepartureDelayGroups",
-    "DepTimeBlk",
-    "TaxiOut",
-    "WheelsOff",
-    "WheelsOn",
-    "TaxiIn",
-    "CRSArrTime",
-    "ArrDelay",
-    "ArrDel15",
-    "ArrivalDelayGroups",
-    "ArrTimeBlk",
-    "DistanceGroup",
-    "DivAirportLandings"
+    "Route",
+    "Hub_Airline",
+    "Month_cos",
+    "DayofMonth_cos",
+    "Is_Winter",
+    "Hub_x_Dest"
   ],
-  "default_model": "naive_bayes",
+  "default_model": "decision_tree",
   "pipeline": {
-    "path": "pipeline.joblib",
-    "description_path": "pipeline_description.json"
+    "path": "pipeline/preparation_pipeline.joblib",
+    "description_path": "pipeline/pipeline_description.md"
   },
   "models": [
     {
-      "id": "logreg",
-      "technique": "Logistic Regression (SGD)",
-      "path": "logreg.joblib",
-      "hyperparams_path": "logreg_hyperparams.json"
+      "id": "decision_tree",
+      "technique": "Decision Tree",
+      "path": "models/decision_tree.joblib",
+      "metrics": {
+        "id": "decision_tree",
+        "technique": "Decision Tree",
+        "accuracy": 0.5,
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1": 0.6666666666666666
+      },
+      "hyperparams_path": "models/decision_tree_hyperparams.json"
+    },
+    {
+      "id": "gradient_boosting",
+      "technique": "Gradient Boosting",
+      "path": "models/gradient_boosting.joblib",
+      "metrics": {
+        "id": "gradient_boosting",
+        "technique": "Gradient Boosting",
+        "accuracy": 0.6377898472531952,
+        "precision": 0.6133729246613856,
+        "recall": 0.7454739467184615,
+        "f1": 0.6730023000947097
+      },
+      "hyperparams_path": "models/gradient_boosting_hyperparams.json"
+    },
+    {
+      "id": "knn",
+      "technique": "KNN",
+      "path": "models/knn.joblib",
+      "metrics": {
+        "id": "knn",
+        "technique": "KNN",
+        "accuracy": 0.6253147255593123,
+        "precision": 0.6058988024073436,
+        "recall": 0.7169867875212814,
+        "f1": 0.6567785441286298
+      },
+      "hyperparams_path": "models/knn_hyperparams.json"
+    },
+    {
+      "id": "logistic_regression",
+      "technique": "Logistic Regression",
+      "path": "models/logistic_regression.joblib",
+      "metrics": {
+        "id": "logistic_regression",
+        "technique": "Logistic Regression",
+        "accuracy": 0.6351941107354387,
+        "precision": 0.6003220697877186,
+        "recall": 0.808994556746517,
+        "f1": 0.6892096177810464
+      },
+      "hyperparams_path": "models/logistic_regression_hyperparams.json"
+    },
+    {
+      "id": "mlp",
+      "technique": "MLP",
+      "path": "models/mlp.joblib",
+      "metrics": {
+        "id": "mlp",
+        "technique": "MLP",
+        "accuracy": 0.5861209025729563,
+        "precision": 0.5672855349682447,
+        "recall": 0.7260868522648251,
+        "f1": 0.6369373159444678
+      },
+      "hyperparams_path": "models/mlp_hyperparams.json"
     },
     {
       "id": "naive_bayes",
-      "technique": "Bernoulli Naive Bayes",
-      "path": "naive_bayes.joblib",
-      "hyperparams_path": "naive_bayes_hyperparams.json"
+      "technique": "Naive Bayes",
+      "path": "models/naive_bayes.joblib",
+      "metrics": {
+        "id": "naive_bayes",
+        "technique": "Naive Bayes",
+        "accuracy": 0.6494916432870537,
+        "precision": 0.671636038268291,
+        "recall": 0.5849818957868739,
+        "f1": 0.6253212090918995
+      },
+      "hyperparams_path": "models/naive_bayes_hyperparams.json"
+    },
+    {
+      "id": "random_forest",
+      "technique": "Random Forest",
+      "path": "models/random_forest.joblib",
+      "metrics": {
+        "id": "random_forest",
+        "technique": "Random Forest",
+        "accuracy": 0.6170059707934681,
+        "precision": 0.5782071419412745,
+        "recall": 0.8650576697120111,
+        "f1": 0.6931264710120563
+      },
+      "hyperparams_path": "models/random_forest_hyperparams.json"
     }
   ]
 }
