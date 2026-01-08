@@ -6,8 +6,8 @@
     "Dest",
     "Route",
     "Hub_Airline",
-    "Month_cos",
-    "DayofMonth_cos",
+    "Month",
+    "DayofMonth",
     "Is_Winter",
     "Hub_x_Dest"
   ],
