@@ -11,6 +11,7 @@ class PredictSingleBody(BaseModel):
 @router.post("/predict-single")
 def predict_single(body: PredictSingleBody, request: Request):
     reg = request.app.state.registry
+    # Use default model if none specified
     model_id = body.model_id or reg.manifest["default_model"]
 
     if model_id not in reg.models:
@@ -18,27 +19,21 @@ def predict_single(body: PredictSingleBody, request: Request):
 
     cols = reg.manifest["feature_columns"]
     
-    # Determine if we have raw features or processed features
-    # Heuristic: If we have "Airline", "Origin", "Dest" (raw keys) then use full_pipeline
-    # Otherwise use strict feature_columns (processed) features logic.
-    
-    # We essentially trust the input dict to be raw if full_pipeline is available.
     if hasattr(reg, 'full_pipeline') and reg.full_pipeline:
+         # Use full pipeline if available (likely handles raw features)
          X = pd.DataFrame([body.features])
     else:
-        # Legacy behavior: strict adherence to processed feature columns
-        # Fill missing features with defaults
+        # Legacy fallback: strict feature column adherence with default imputation
         full_features = {}
         for c in cols:
             val = body.features.get(c)
             if val is None:
-                # Simple imputation: "0" for maybe-numeric, "" for text
-                val = 0 # Default to number 0
+                val = 0
             full_features[c] = val
         X = pd.DataFrame([full_features], columns=cols)
 
     if hasattr(reg, 'full_pipeline') and reg.full_pipeline:
-         # Drop target if present (unlikely in predict mode but safe)
+         # Clean X and transform using the full pipeline
          X = X.drop(columns=[reg.manifest["target_column"]], errors='ignore')
          Xt = reg.full_pipeline.transform(X)
     else:

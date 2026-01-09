@@ -9,10 +9,8 @@ from app.routes import models, predict, evaluate
 app = FastAPI(title="Prediction Server")
 
 
-# --- Absolute paths (no cwd issues) ---
-# backend/app/main.py -> backend/
+# --- Absolute paths ---
 BACKEND_DIR = Path(__file__).resolve().parents[1]
-# backend/ -> prediction-server/
 PROJECT_DIR = BACKEND_DIR.parent
 
 MANIFEST_PATH = BACKEND_DIR / "artifacts" / "manifest.json"
@@ -28,13 +26,12 @@ app.include_router(models.router, prefix="/api")
 app.include_router(predict.router, prefix="/api")
 app.include_router(evaluate.router, prefix="/api")
 
-# --- Serve the UI from prediction-server/frontend (NOT backend/frontend) ---
+# --- Serve the UI from prediction-server/frontend ---
 FRONTEND_DIR = PROJECT_DIR / "frontend"
 
 if FRONTEND_DIR.exists():
     app.mount("/", StaticFiles(directory=str(FRONTEND_DIR), html=True), name="frontend")
 else:
-    # Don't crash startup if the folder isn't there
     @app.get("/")
     def root():
         return {
